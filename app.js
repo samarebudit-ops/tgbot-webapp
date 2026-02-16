@@ -11,11 +11,11 @@ function send(payload){
 if (tg) {
   tg.expand();
   tg.ready();
-  // Авто-пинг при открытии WebApp
-  send({ type: "ping", t: Date.now() });
+  send({ type: "ping", t: Date.now() }); // авто-пинг при открытии
 }
 
 const q = document.getElementById("q");
+
 document.getElementById("sendBtn").onclick = () => {
   const text = (q.value || "").trim();
   if (!text) return;
