@@ -1,46 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tg = window.Telegram?.WebApp;
   const q = document.getElementById("q");
+  const sendBtn = document.getElementById("sendBtn");
+
+  // мини-индикатор вверху (если элемента нет — создадим)
+  let s = document.getElementById("tgstatus");
+  if (!s) {
+    s = document.createElement("div");
+    s.id = "tgstatus";
+    s.style.cssText = "font-size:12px;opacity:.85;margin:6px 2px;";
+    document.body.prepend(s);
+  }
+
+  const set = (t) => s.textContent = t;
+
+  if (!tg) {
+    set("❌ Telegram.WebApp = null (открыто не как WebApp)");
+  } else {
+    tg.expand(); tg.ready();
+    set("✅ WebApp connected. platform=" + tg.platform);
+  }
 
   function send(payload){
-    if (!tg) {
-      alert("Открой через Telegram (кнопкой Web App), а не в браузере.");
-      return;
-    }
-    tg.sendData(JSON.stringify(payload));
-    // ВАЖНО: многие клиенты доставляют данные при закрытии WebApp
-    setTimeout(() => tg.close(), 150);
+    alert("sendData() called");           // <- чтобы 100% видеть вызов
+    if (!tg) return alert("Открой через Telegram (Web App), не в браузере.");
+    tg.sendData(JSON.stringify(payload)); // <- отправка в бота
+    set("✅ SENT ✅ " + JSON.stringify(payload));
   }
 
-  if (tg) {
-    tg.expand();
-    tg.ready();
-
-    // Надёжный способ: MainButton
-    tg.MainButton.setText("Отправить в бот");
-    tg.MainButton.show();
-    tg.MainButton.onClick(() => {
-      const text = (q?.value || "").trim() || "ping";
-      send({ type: "text", text });
-      if (q) q.value = "";
-    });
-  }
-
-  // Чипы тоже отправляют и закрывают
-  document.querySelectorAll(".chip").forEach(btn=>{
-    btn.addEventListener("click", () => {
-      send({ type: "mode", mode: btn.dataset.mode });
-    });
-  });
-
-  // Кнопка ➤
-  const sendBtn = document.getElementById("sendBtn");
+  // кнопка ➤
   if (sendBtn) {
     sendBtn.addEventListener("click", () => {
       const text = (q?.value || "").trim();
       if (!text) return alert("Пустой текст");
       send({ type: "text", text });
-      if (q) q.value = "";
     });
   }
+
+  // чипы
+  document.querySelectorAll(".chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      send({ type: "mode", mode: btn.dataset.mode });
+    });
+  });
 });
