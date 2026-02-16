@@ -1,37 +1,77 @@
 :root{
-  --bg:#0b0f1a;
-  --glass: rgba(255,255,255,.08);
-  --stroke: rgba(255,255,255,.12);
-  --text: rgba(255,255,255,.92);
-  --muted: rgba(255,255,255,.65);
-  --fire:#ff6a2b;
-  --ice:#3aa7ff;
+  --bg:#0b0f17;
+  --card:#0f172a;
+  --ice:#7dd3fc;
+  --fire:#fb7185;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+  --line:rgba(148,163,184,.18);
 }
-*{box-sizing:border-box;font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;}
-body{margin:0;background:radial-gradient(1200px 800px at 20% 10%, rgba(255,106,43,.25), transparent 60%),
-                 radial-gradient(1200px 800px at 80% 20%, rgba(58,167,255,.25), transparent 60%),
-                 var(--bg);
-     color:var(--text);}
-.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;gap:10px;padding:12px;}
-.glass{background:var(--glass);border:1px solid var(--stroke);backdrop-filter: blur(12px);-webkit-backdrop-filter: blur(12px);border-radius:16px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;}
-.brand{display:flex;gap:10px;align-items:center;}
-.avatar{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg, rgba(255,106,43,.9), rgba(58,167,255,.9));}
-.title{font-weight:700;letter-spacing:.2px}
-.status{font-size:12px;color:var(--muted)}
-.iconbtn{background:transparent;border:0;color:var(--text);font-size:18px;padding:8px;border-radius:12px;}
-.iconbtn:active{transform:scale(.98);}
-.chat{flex:1;display:flex;flex-direction:column;gap:10px;padding:14px;overflow:auto;}
-.bubble{max-width:85%;padding:10px 12px;border-radius:14px;line-height:1.25;font-size:14px;}
-.bubble.user{align-self:flex-end;background:rgba(58,167,255,.18);border:1px solid rgba(58,167,255,.25);}
-.bubble.bot{align-self:flex-start;background:rgba(255,106,43,.14);border:1px solid rgba(255,106,43,.22);}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-.chip{border:1px solid var(--stroke);background:rgba(255,255,255,.06);color:var(--text);padding:8px 10px;border-radius:999px;font-size:13px;}
-.chip.fire{box-shadow:0 0 18px rgba(255,106,43,.18);}
-.chip.ice{box-shadow:0 0 18px rgba(58,167,255,.18);}
-.composer{display:flex;gap:8px;align-items:center;padding:10px;}
-.composer input{flex:1;background:rgba(0,0,0,.25);border:1px solid var(--stroke);color:var(--text);padding:10px 12px;border-radius:14px;outline:none;}
-.send{background:linear-gradient(135deg, rgba(255,106,43,.95), rgba(58,167,255,.95));border:0;color:#07101a;font-weight:800;padding:10px 12px;border-radius:14px;}
-.tabs{display:flex;justify-content:space-between;padding:8px;}
-.tab{flex:1;border:0;background:transparent;color:var(--muted);padding:10px;border-radius:12px;font-size:13px;}
-.tab.active{color:var(--text);background:rgba(255,255,255,.06);}
+*{box-sizing:border-box}
+body{
+  margin:0; background:radial-gradient(1200px 800px at 20% 0%, rgba(125,211,252,.18), transparent 60%),
+  radial-gradient(1200px 800px at 80% 0%, rgba(251,113,133,.14), transparent 60%),
+  var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+.top{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  background:linear-gradient(90deg, rgba(125,211,252,.08), rgba(251,113,133,.08));
+}
+.brand{font-weight:800; letter-spacing:.3px}
+.sub{font-size:12px; color:var(--muted); margin-top:2px}
+.chips{
+  display:flex; gap:8px; padding:10px 12px; overflow:auto;
+  border-bottom:1px solid var(--line);
+}
+.chip{
+  border:1px solid var(--line);
+  background:rgba(15,23,42,.6);
+  color:var(--text);
+  padding:8px 10px; border-radius:999px;
+  white-space:nowrap;
+}
+.messages{
+  height: calc(100vh - 56px - 54px - 54px);
+  overflow:auto;
+  padding:12px;
+}
+.msg{display:flex; margin:10px 0}
+.msg.user{justify-content:flex-end}
+.bubble{
+  max-width:85%;
+  padding:10px 12px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(15,23,42,.7);
+  line-height:1.35;
+  white-space:pre-wrap;
+}
+.msg.user .bubble{
+  background:linear-gradient(135deg, rgba(251,113,133,.18), rgba(125,211,252,.12));
+  border-color:rgba(251,113,133,.25);
+}
+.bar{
+  position:fixed; left:0; right:0; bottom:0;
+  display:flex; gap:8px; padding:10px;
+  border-top:1px solid var(--line);
+  background:rgba(11,15,23,.85);
+  backdrop-filter: blur(8px);
+}
+.input{
+  flex:1;
+  border:1px solid var(--line);
+  background:rgba(15,23,42,.7);
+  color:var(--text);
+  border-radius:14px;
+  padding:10px 12px;
+}
+.icon,.send{
+  width:44px;
+  border:1px solid var(--line);
+  background:rgba(15,23,42,.7);
+  color:var(--text);
+  border-radius:14px;
+}

@@ -1,52 +1,33 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tg bot</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>🔥❄️ Finansistic AI</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-  <div class="app">
-    <header class="topbar glass">
-      <div class="brand">
-        <div class="avatar"></div>
-        <div>
-          <div class="title">Tg bot</div>
-          <div class="status">Online</div>
-        </div>
-      </div>
-      <button class="iconbtn" id="menuBtn">☰</button>
-    </header>
+  <header class="top">
+    <div class="brand">🔥❄️ Finansistic AI</div>
+    <div class="sub">WebApp чат • текст + картинки</div>
+  </header>
 
-    <main class="chat glass" id="chat">
-      <div class="bubble user">Привет! Что умеешь?</div>
-      <div class="bubble bot">Я ИИ-бот: отвечаю текстом/голосом и распознаю изображения.</div>
+  <section class="chips">
+    <button class="chip" data-prompt="Сделай план на 7 дней по улучшению финансов.">План</button>
+    <button class="chip" data-prompt="Объясни простыми словами, как работает сложный процент.">Объясни</button>
+    <button class="chip" data-prompt="Дай 5 идей заработка онлайн в 2026.">Идеи</button>
+  </section>
 
-      <div class="chips">
-        <button class="chip fire" data-mode="voice">🎙 Голос</button>
-        <button class="chip ice" data-mode="vision">🖼 Распознать</button>
-        <button class="chip fire" data-mode="ask">✨ Спросить</button>
-        <button class="chip ice" data-mode="settings">⚙️ Настройки</button>
-      </div>
-    </main>
+  <main id="messages" class="messages"></main>
 
-    <footer class="composer glass">
-      <button class="iconbtn">📎</button>
-      <input id="q" placeholder="Напиши запрос..." />
-      <button class="iconbtn" id="micBtn">🎤</button>
-      <button class="send" id="sendBtn">➤</button>
-    </footer>
+  <footer class="bar">
+    <button id="imgBtn" class="icon">📷</button>
+    <input id="input" class="input" placeholder="Напиши сообщение…"/>
+    <button id="sendBtn" class="send">➤</button>
+    <input id="imgFile" type="file" accept="image/*" hidden />
+  </footer>
 
-    <nav class="tabs glass">
-      <button class="tab active">💬 Чат</button>
-      <button class="tab">🎤 Голос</button>
-      <button class="tab">🖼 Изображение</button>
-      <button class="tab">👤 Профиль</button>
-    </nav>
-  </div>
-
-  <script src="https://telegram.org/js/telegram-web-app.js?v=999"></script>
-  <script src="app.js?v=999?v=999"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>
