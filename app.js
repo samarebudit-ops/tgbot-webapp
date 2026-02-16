@@ -1,6 +1,11 @@
-const API_BASE = "https://tg-bot-webhook-kx1i.onrender.com"; // Render API
+const API_BASE = "https://tg-bot-webhook-kx1i.onrender.com";
 
 function el(id){ return document.getElementById(id); }
+function escapeHtml(s){
+  return (s||"").replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
 
 function addMsg(role, text){
   const wrap = el("messages");
@@ -9,12 +14,7 @@ function addMsg(role, text){
   row.innerHTML = `<div class="bubble">${escapeHtml(text)}</div>`;
   wrap.appendChild(row);
   wrap.scrollTop = wrap.scrollHeight;
-}
-
-function escapeHtml(s){
-  return (s||"").replace(/[&<>"']/g, m => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  }[m]));
+  return row;
 }
 
 async function postJSON(path, body){
@@ -51,20 +51,20 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!text) return;
     input.value = "";
     addMsg("user", text);
-    addMsg("bot", "❄️🔥 Думаю...");
+    const thinking = addMsg("bot", "❄️🔥 Думаю...");
 
     try{
       const j = await postJSON("/api/chat", {initData, text});
-      // заменяем последнюю "Думаю..." на ответ
-      el("messages").lastChild.querySelector(".bubble").textContent = j.answer;
+      thinking.querySelector(".bubble").textContent = j.answer;
     }catch(e){
-      el("messages").lastChild.querySelector(".bubble").textContent = "⚠️ " + e.message;
+      thinking.querySelector(".bubble").textContent = "⚠️ " + e.message;
     }
   }
 
   async function sendImage(file){
-    addMsg("user", "📷 Отправляю изображение...");
-    addMsg("bot", "❄️🔥 Анализирую...");
+    addMsg("user", `📷 ${file.name}`);
+    const thinking = addMsg("bot", "❄️🔥 Анализирую изображение...");
+
     const dataUrl = await new Promise((res, rej) => {
       const fr = new FileReader();
       fr.onload = () => res(fr.result);
@@ -73,10 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     try{
-      const j = await postJSON("/api/vision", {initData, imageDataUrl: dataUrl});
-      el("messages").lastChild.querySelector(".bubble").textContent = j.answer;
+      const j = await postJSON("/api/vision", {
+        initData,
+        imageDataUrl: dataUrl,
+        prompt: "Опиши, что на изображении, и дай краткий вывод."
+      });
+      thinking.querySelector(".bubble").textContent = j.answer;
     }catch(e){
-      el("messages").lastChild.querySelector(".bubble").textContent = "⚠️ " + e.message;
+      thinking.querySelector(".bubble").textContent = "⚠️ " + e.message;
     }
   }
 
@@ -94,7 +98,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (f) sendImage(f);
   });
 
-  // быстрые режимы
   document.querySelectorAll(".chip").forEach(btn => {
     btn.addEventListener("click", () => {
       input.value = btn.dataset.prompt || "";
