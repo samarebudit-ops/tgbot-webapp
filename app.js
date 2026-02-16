@@ -1,14 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const tg = window.Telegram?.WebApp;
-
-  const statusEl = document.getElementById("tgstatus");
   const q = document.getElementById("q");
-  const sendBtn = document.getElementById("sendBtn");
-
-  function setStatus(ok, msg){
-    if (!statusEl) return;
-    statusEl.textContent = (ok ? "✅ WebApp: " : "❌ WebApp: ") + msg;
-  }
 
   function send(payload){
     if (!tg) {
@@ -16,41 +8,39 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
     tg.sendData(JSON.stringify(payload));
+    // ВАЖНО: многие клиенты доставляют данные при закрытии WebApp
+    setTimeout(() => tg.close(), 150);
   }
 
-  // Проверим, что элементы реально есть
-  if (!q || !sendBtn) {
-    alert("Ошибка UI: не найден q или sendBtn. Обнови страницу/кэш.");
-    return;
-  }
-
-  // Telegram WebApp init
   if (tg) {
     tg.expand();
     tg.ready();
-    setStatus(true, "connected");
-    send({ type: "ping", t: Date.now() });
-  } else {
-    setStatus(false, "opened in browser");
+
+    // Надёжный способ: MainButton
+    tg.MainButton.setText("Отправить в бот");
+    tg.MainButton.show();
+    tg.MainButton.onClick(() => {
+      const text = (q?.value || "").trim() || "ping";
+      send({ type: "text", text });
+      if (q) q.value = "";
+    });
   }
 
-  // Клик по отправке
-  sendBtn.addEventListener("click", () => {
-    // Визуальный дебаг: чтобы ты точно видел, что клик работает
-    sendBtn.textContent = "…";
-    setTimeout(() => (sendBtn.textContent = "➤"), 300);
-
-    const text = (q.value || "").trim();
-    if (!text) { alert("Пустой текст"); return; }
-    send({ type: "text", text });
-    q.value = "";
-  });
-
-  // Чипы
-  document.querySelectorAll(".chip").forEach((btn) => {
+  // Чипы тоже отправляют и закрывают
+  document.querySelectorAll(".chip").forEach(btn=>{
     btn.addEventListener("click", () => {
-      alert("Нажато: " + (btn.dataset.mode || "chip"));
       send({ type: "mode", mode: btn.dataset.mode });
     });
   });
+
+  // Кнопка ➤
+  const sendBtn = document.getElementById("sendBtn");
+  if (sendBtn) {
+    sendBtn.addEventListener("click", () => {
+      const text = (q?.value || "").trim();
+      if (!text) return alert("Пустой текст");
+      send({ type: "text", text });
+      if (q) q.value = "";
+    });
+  }
 });
