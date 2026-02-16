@@ -1,18 +1,28 @@
 const tg = window.Telegram?.WebApp;
-if (tg) { tg.expand(); tg.ready(); }
+
+function send(payload){
+  if (!tg) {
+    alert("Открой через Telegram (кнопкой бота), а не в браузере.");
+    return;
+  }
+  tg.sendData(JSON.stringify(payload));
+}
+
+if (tg) {
+  tg.expand();
+  tg.ready();
+  // Авто-пинг при открытии WebApp
+  send({ type: "ping", t: Date.now() });
+}
 
 const q = document.getElementById("q");
 document.getElementById("sendBtn").onclick = () => {
   const text = (q.value || "").trim();
   if (!text) return;
-  if (!tg) return alert("Открой через Telegram.");
-  tg.sendData(JSON.stringify({ type: "text", text }));
+  send({ type: "text", text });
   q.value = "";
 };
 
 document.querySelectorAll(".chip").forEach(btn=>{
-  btn.onclick = () => {
-    if (!tg) return alert("Открой через Telegram.");
-    tg.sendData(JSON.stringify({ type: "mode", mode: btn.dataset.mode }));
-  };
+  btn.onclick = () => send({ type: "mode", mode: btn.dataset.mode });
 });
